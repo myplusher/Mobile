@@ -29,15 +29,19 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/def"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:text="Определение типологии личности по Юнгу"
+                android:gravity="center"
                 android:textSize="34sp" />
 
             <TextView
+                android:id="@+id/detText"
                 android:layout_width="wrap_content"
                 android:layout_height="512dp"
-                android:text="kj" />
+                android:gravity="center"
+                android:text="" />
 
         </LinearLayout>
     </ScrollView>

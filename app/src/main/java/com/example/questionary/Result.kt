@@ -6,6 +6,11 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import com.example.questionary.data.model.User
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.ResponseDeserializable
+import com.github.kittinunf.result.Result
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_result.*
 
 class Result : AppCompatActivity() {
@@ -13,12 +18,33 @@ class Result : AppCompatActivity() {
     lateinit var editor: SharedPreferences.Editor
 
     var anxiety: Int = 0
+    var defText: TextView? = null
+    var num: ResultNum? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
+        Fuel.get("https://jungtest.herokuapp.com/questionnaire/result")
+            .header(mapOf("Content-Type" to "application/json", "Authorization" to "${User.token}"))
+            .responseObject(ResultNum.Deserializer()) { request, response, result ->
+                when (response) {
+                    response -> {
+                        var a = response.body()
 
+//                        val ex = result.getException()
+                        println(a)
+                    }
+                    //is Result.Success -> {
+                    //    num = result.component1()
+                    //    var a = response.body()
+                   //     println(num)
+                    //}
+                }
+            }
+        defText = findViewById(R.id.detText)
+        defText?.text = "Согласно прохождению теста вы являетесь"
 //        profileBtn?.setOnClickListener {
 //            // TODO повесить проверку если юзер авторизирован
 //            startActivity(Intent(this, ProfileActivity::class.java))
@@ -60,4 +86,17 @@ class Result : AppCompatActivity() {
 //            }
 //        }
 //    }
+}
+
+data class ResultNum (
+    var number: String,
+) {
+    fun ResultNum(number: String) {
+        this.number = number
+    }
+
+    class Deserializer : ResponseDeserializable<ResultNum> {
+        override fun deserialize(content: String): ResultNum =
+            Gson().fromJson(content, ResultNum::class.java)
+    }
 }

@@ -6,11 +6,14 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import com.example.questionary.data.model.User
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.result.Result
 import com.google.gson.Gson
+
 //import com.example.questionary.data.model.AnswerOfQuestion
 //import com.example.questionary.data.model.Question
 //import com.example.questionary.data.model.TypeOfQuestion
@@ -27,6 +30,28 @@ class Questions : AppCompatActivity() {
     var index: Int = 0
     var even: Button? = null
     var odd: Button? = null
+    var access: Array<Boolean> = arrayOf(
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +63,8 @@ class Questions : AppCompatActivity() {
         questionlabel = findViewById(R.id.textQuestion)
         even = findViewById(R.id.btnEven)
         odd = findViewById(R.id.btnOdd)
+
+
     }
 
     override fun onStart() {
@@ -69,8 +96,18 @@ class Questions : AppCompatActivity() {
         questionlabel?.text = question?.text
         even!!.text = answ[0].text
         odd!!.text = answ[1].text
+
     }
 
+    fun setUnClick(v: View) {
+        if (!access[index-1]) {
+            even?.isClickable = false
+            odd?.isClickable = false
+        } else {
+            even?.isClickable = true
+            odd?.isClickable = true
+        }
+    }
 
 
     private fun sendAnswer(id: Int) {
@@ -104,7 +141,11 @@ class Questions : AppCompatActivity() {
         when (v.id) {
             R.id.btnNext -> {
                 index++
-                if (index <= 19){
+                setUnClick(v)
+                if (index == 0) {
+                    next?.setText("yes")
+                } else if (index <= 19) {
+                    next?.setText("next")
                     getQuestions()
                 } else if (index == 20) {
                     next?.setText("complete")
@@ -115,20 +156,27 @@ class Questions : AppCompatActivity() {
             }
 
             R.id.btnCancel -> {
-                if (index == 1) {
+                if (index <= 1) {
                     startActivity(Intent(this, MainActivity::class.java))
                 } else {
                     index--
+                    setUnClick(v)
                     getQuestions()
                 }
             }
             R.id.btnEven -> {
-                println(index*2)
-                sendAnswer(index*2)
+                access[index-1] = false
+                setUnClick(v)
+                println(index * 2)
+                setUnClick(v)
+                //sendAnswer(index * 2)
             }
             R.id.btnOdd -> {
-                println((index*2)-1)
-                sendAnswer((index*2)-1)
+                access[index-1] = false
+                setUnClick(v)
+                println((index * 2) - 1)
+                setUnClick(v)
+                //sendAnswer((index * 2) - 1)
             }
         }
     }
