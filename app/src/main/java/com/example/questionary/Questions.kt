@@ -141,13 +141,15 @@ class Questions : AppCompatActivity() {
         when (v.id) {
             R.id.btnNext -> {
                 index++
-                setUnClick(v)
                 if (index == 0) {
+                    setUnClick(v)
                     next?.setText("yes")
                 } else if (index <= 19) {
+                    setUnClick(v)
                     next?.setText("next")
                     getQuestions()
                 } else if (index == 20) {
+                    setUnClick(v)
                     next?.setText("complete")
                     getQuestions()
                 } else {

@@ -36,7 +36,7 @@
         android:id="@+id/contBtn"
         android:layout_width="210dp"
         android:layout_height="50dp"
-        android:text="Continue"
+        android:text="Go to test"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

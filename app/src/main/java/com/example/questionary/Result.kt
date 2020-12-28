@@ -12,6 +12,7 @@ import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.result.Result
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_result.*
+import kotlin.random.Random
 
 class Result : AppCompatActivity() {
     private lateinit var prefs: SharedPreferences
@@ -26,25 +27,35 @@ class Result : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
-        Fuel.get("https://jungtest.herokuapp.com/questionnaire/result")
-            .header(mapOf("Content-Type" to "application/json", "Authorization" to "${User.token}"))
-            .responseObject(ResultNum.Deserializer()) { request, response, result ->
-                when (response) {
-                    response -> {
-                        var a = response.body()
+//        Fuel.get("https://jungtest.herokuapp.com/questionnaire/result")
+//            .header(mapOf("Content-Type" to "application/json", "Authorization" to "${User.token}"))
+//            .responseObject(ResultNum.Deserializer()) { request, response, result ->
+//                when (response) {
+//                    response -> {
+//                        var a = response.body()
+//
+////                        val ex = result.getException()
+//                        println(a)
+//                    }
+//                    //is Result.Success -> {
+//                    //    num = result.component1()
+//                    //    var a = response.body()
+//                   //     println(num)
+//                    //}
+//                }
+//            }
 
-//                        val ex = result.getException()
-                        println(a)
-                    }
-                    //is Result.Success -> {
-                    //    num = result.component1()
-                    //    var a = response.body()
-                   //     println(num)
-                    //}
-                }
-            }
-        defText = findViewById(R.id.detText)
-        defText?.text = "Согласно прохождению теста вы являетесь"
+        var r = Random.nextInt(0,2)
+        val list = listOf("introvert", "extrovert", "ambivert")
+        var value = list[r]
+
+        defText = findViewById(R.id.resultText)
+        defText?.text = "According to the test, you are " + value
+
+
+
+
+
 //        profileBtn?.setOnClickListener {
 //            // TODO повесить проверку если юзер авторизирован
 //            startActivity(Intent(this, ProfileActivity::class.java))
