@@ -1,21 +1,15 @@
 package com.example.questionary
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
-import android.os.SystemClock
 import android.view.View
 import android.widget.Button
-import android.widget.Chronometer
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.questionary.data.model.User
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.result.Result
-import com.google.android.material.button.MaterialButton
 import com.google.gson.Gson
 //import com.example.questionary.data.model.AnswerOfQuestion
 //import com.example.questionary.data.model.Question
@@ -23,18 +17,14 @@ import com.google.gson.Gson
 //import com.example.questionary.ui.login.LoginActivity
 
 
-
-
-
-
 class Questions : AppCompatActivity() {
 
     var next: Button? = null
     var cancel: Button? = null
     var number: TextView? = null
-    var question: TextView? = null
-    var questions: Question? = null
-    var count: Int = 1
+    var questionlabel: TextView? = null
+    var question: Question? = null
+    var index: Int = 0
     var even: Button? = null
     var odd: Button? = null
 
@@ -45,14 +35,18 @@ class Questions : AppCompatActivity() {
         next = findViewById(R.id.btnNext)
         cancel = findViewById(R.id.btnCancel)
         number = findViewById(R.id.textNumber)
-        question = findViewById(R.id.textQuestion)
+        questionlabel = findViewById(R.id.textQuestion)
         even = findViewById(R.id.btnEven)
         odd = findViewById(R.id.btnOdd)
+    }
+
+    override fun onStart() {
+        super.onStart()
         getQuestions()
     }
 
     private fun getQuestions() {
-        Fuel.get("https://jungtest.herokuapp.com/question/" + count)
+        Fuel.get("https://jungtest.herokuapp.com/question/" + index)
             .responseObject(Question.Deserializer()) { request, response, result ->
                 when (result) {
                     is Result.Failure -> {
@@ -60,30 +54,39 @@ class Questions : AppCompatActivity() {
                         println(ex)
                     }
                     is Result.Success -> {
-                        questions = result.component1()
-                        if (questions != null) {
-                            z()
-                        }
-                        println(questions)
+                        question = result.component1()
+                        question?.let { z(it) }
+
+                        println(question)
                     }
                 }
             }
     }
 
-    fun z() {
-        number?.setText("Question " + questions?.id)
-        question?.setText(questions?.text)
-        even?.setText(questions?.answers?.get(0)?.text)
-        odd?.setText(questions?.answers?.get(1)?.text)
-
+    fun z(question: Question) {
+        var answ = question?.answers!!
+        number?.text = "Question " + question?.id
+        questionlabel?.text = question?.text
+        even!!.text = answ[0].text
+        odd!!.text = answ[1].text
     }
+
+
 
     private fun sendAnswer(id: Int) {
         val p = listOf(
-            Pair("username", id.toString()),
+            Pair("id", id.toString()),
         )
-        Fuel.post("https://jungtest.herokuapp.com/selanswer/sav", parameters = p)
-            .header(mapOf("Content-Type" to "application/json"))
+
+        val bodyJson = """
+              { 
+                "id" : "$id",
+              }
+            """
+
+        Fuel.post("https://jungtest.herokuapp.com/selanswer/sav")
+            .header(mapOf("Content-Type" to "application/json", "Authorization" to "${User.token}"))
+            .body(bodyJson)
             .response() { request, response, result ->
                 when (result) {
                     is Result.Failure -> {
@@ -91,7 +94,7 @@ class Questions : AppCompatActivity() {
                         println(ex)
                     }
                     is Result.Success -> {
-                        startActivity(Intent(this, Logging::class.java))
+                        startActivity(Intent(this, Login::class.java))
                     }
                 }
             }
@@ -100,10 +103,10 @@ class Questions : AppCompatActivity() {
     fun OnClick(v: View) {
         when (v.id) {
             R.id.btnNext -> {
-                count++
-                if (count <= 19){
+                index++
+                if (index <= 19){
                     getQuestions()
-                } else if (count == 20) {
+                } else if (index == 20) {
                     next?.setText("complete")
                     getQuestions()
                 } else {
@@ -112,20 +115,20 @@ class Questions : AppCompatActivity() {
             }
 
             R.id.btnCancel -> {
-                if (count == 1) {
+                if (index == 1) {
                     startActivity(Intent(this, MainActivity::class.java))
                 } else {
-                    count--
+                    index--
                     getQuestions()
                 }
             }
             R.id.btnEven -> {
-                println(count*2)
-                sendAnswer(count*2)
+                println(index*2)
+                sendAnswer(index*2)
             }
             R.id.btnOdd -> {
-                println((count*2)-1)
-                sendAnswer((count*2)-1)
+                println((index*2)-1)
+                sendAnswer((index*2)-1)
             }
         }
     }
@@ -135,7 +138,7 @@ class Questions : AppCompatActivity() {
 data class Question(
     var id: String,
     var text: String,
-    var answers: Array<Answer>,
+    var answers: List<Answer>,
 ) {
     class Deserializer : ResponseDeserializable<Question> {
         override fun deserialize(content: String): Question =

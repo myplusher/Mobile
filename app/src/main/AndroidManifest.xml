@@ -17,7 +17,7 @@
         <activity android:name=".RegistrationActivity"></activity>
         <activity android:name=".BeforeTestActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".Logging" /> <!-- <activity android:name=".Authorization" /> -->
+        <activity android:name=".Login" /> <!-- <activity android:name=".Authorization" /> -->
         <activity android:name=".Result" />
         <activity android:name=".Questions" />
         <activity android:name=".Registration" />

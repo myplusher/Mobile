@@ -4,17 +4,17 @@ import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.google.gson.Gson
 
 data class UserForRegistration (
-    var login: String,
+    var username: String,
     var password: String,
     var sex: Boolean,
-    var date: String,
+    var dateOfBirth: String,
     //var birthday: String
 ) {
-    fun UserForRegistration(login: String, password: String, date: String, sex: Boolean) {
-        this.login = login
+    fun UserForRegistration(username: String, password: String, dateOfBirth: String, sex: Boolean) {
+        this.username = username
         this.password = password
         this.sex = sex
-        this.date = date
+        this.dateOfBirth = dateOfBirth
         //this.birthday = birthday
     }
 

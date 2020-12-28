@@ -38,7 +38,6 @@
         android:layout_marginTop="110dp"
         android:layout_marginEnd="180dp"
         android:gravity="center"
-        android:text="Question 1"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +51,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
         android:gravity="center"
-        android:text="Loading..."
+        android:text="Ready?"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +66,6 @@
         android:width="110dp"
         android:height="120dp"
         android:onClick="OnClick"
-        android:text="Button"
         app:layout_constraintBottom_toTopOf="@+id/btnNext"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -80,7 +78,6 @@
         android:width="110dp"
         android:height="120dp"
         android:onClick="OnClick"
-        android:text="Button"
         app:layout_constraintBottom_toTopOf="@+id/btnCancel"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
